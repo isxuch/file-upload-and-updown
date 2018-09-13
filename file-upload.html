@@ -1,0 +1,49 @@
+<!--  -->
+<input id="file" type="file" name="" onchange="upload.fileChange(this);" value="">
+<!--  -->
+<script type="text/javascript">
+var isIE = /msie/i.test(navigator.userAgent) && !window.opera;
+var upload = {
+  fileChange: function(target){
+    var filetypes = [".bpmn",".xml",".txt"]; // 可以上传的文件类型
+    var filepath = target.value; //
+    var fileSize;
+    if(filepath){
+        var isnext = false;
+        var fileend = filepath.substring(filepath.lastIndexOf("."));
+        if(filetypes && filetypes.length>0){
+          for(var i =0; i<filetypes.length;i++){
+            if(filetypes[i]==fileend){
+              isnext = true;
+              break;
+            }
+          }
+        }
+        if(!isnext){
+          alert('不是指定的文件类型');
+          target.value ="";
+          return false;
+        }
+      }
+      if (isIE && !target.files) {
+          var filePath = target.value;
+          var fileSystem = new ActiveXObject("Scripting.FileSystemObject");
+          if(!fileSystem.FileExists(filePath)){
+            alert('文件不存在请重新选择！');
+            return false;
+          }
+          var file = fileSystem.GetFile (filePath);
+          fileSize = file.Size;
+      } else {
+          fileSize = target.files[0].size;
+      }
+      var files = document.getElementById('file').files[0];//获取到文件列表
+      var reader = new FileReader(); //新建一个FileReader
+      reader.readAsText(files, "UTF-8"); //读取文件
+      reader.onload = function(evt){ //读取完文件之后会回来这里
+        var fileString = evt.target.result; // 读取文件内容
+        console.log(fileString);
+      }
+  },
+}
+</script>
